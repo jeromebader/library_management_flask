@@ -1,0 +1,116 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+    <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+      <div class="feature col">
+            <i class="fa fa-user-circle" style="font-size:48px; margin-left: 50px;"></i>
+        <h5 style="margin-left: 30px;">Members</h5>
+        <h5 style="margin-left: 60px;">{{ members|safe }} </h5>
+       
+      </div>
+      <div class="feature col">
+        <i class="fa fa-money" style="font-size:48px; margin-left: 50px;"></i>
+        <h5 style="margin-left: 30px;">Cash received </h5>
+        <h5 style="margin-left: 60px;"> {{ cash|safe }} $</h5>
+       
+      </div>
+      <div class="feature col">
+        <i class="fa fa-shopping-bag" style="font-size:48px; margin-left: 50px;"></i>
+        <h5 style="margin-left: 30px;">Turnover </h5>
+        <h5 style="margin-left: 40px;"> {{ turnover|safe }} $</h5>
+        
+      </div>
+    </div>
+  
+
+
+
+
+{{ msg|safe }}
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  load_data();
+  function load_data(query)
+  {
+   $.ajax({
+    url:"/ajaxlivesearch",
+    method:"POST",
+    data:{querys:query},
+    success:function(data)
+    {
+      $('#result').html(data);
+      $("#result").append(data.htmlresponse);
+    }
+   });
+  }
+  $('#search_text').keyup(function(){
+    var search = $(this).val();
+    if(search != ''){
+    load_data(search);
+   }else{
+    load_data();
+   }
+  });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+
+            <div class="search-box">
+                <div class="row">
+                    <div class="col-md-3">
+                        <h6 style="font-weight:light">Search by: <br />
+                            title, author, isbn, publisher</h6>
+                    </div>
+                    <div class="col-md-9">
+                        <input type="text" name="search_text" id="search_text" class="form-control" placeholder="Search for a book by title, author, isbn, publisher">
+                    </div> 
+                </div>
+            
+
+                
+   <div id="result"></div>
+</div>
+</div>
+<style>
+.search-table{
+    padding: 10%;
+    margin-top: -6%;
+}
+.search-box{
+    
+    padding: 3%;
+}
+.search-box input:focus{
+    box-shadow:none;
+    border:2px solid #eeeeee;
+}
+.search-list{
+    background: #fff;
+    border: 1px solid #ababab;
+    border-top: none;
+}
+.search-list h3{
+    background: rgba(255, 253, 253, 0.993);
+    padding: 3%;color:#fe6f41;
+    margin-bottom: 0%;
+}
+</style>
+
+
+
+
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base_template.html" %}
+{% block title %} {{ titulo }} {% endblock %}
+{{ msg|safe }}
+{% block content %}
+
+
+<div class="container">
+<form class="form-horizontal" method="POST" action="{{ url_for('members') }}">
+    {{ form.csrf_token }}
+    <div class="form-group">{{ form.name.label(style="font-weight:bold") }} {{ form.name(class="form-control")}}</div>
+    <div class="form-group">{{ form.email.label(style="font-weight:bold") }} {{ form.email(class="form-control") }}</div>
+    <div class="form-group">{{ form.status.label(style="font-weight:bold") }} {{ form.status(class="form-control")}}</div>
+    <br>
+    <div class="form-group"> {{ form.submit(class="form-control btn btn-primary",style="font-weight:bold")}}</div>
+   
+</form>
+
+{% with messages = get_flashed_messages(category_filter=["success"]) %}
+{% if messages %}
+  <br>
+    {% for message in messages %}
+    <div class="alert alert-success" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</div>
+
+
+
+
+
+<div class="container" style="padding-top:50px">
+{{ pagination.info|safe }}
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+        <th>Member_id</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+    {% for x in result %}
+    <tr>
+     
+    <td>{{x.member_id}}</td>
+    <td>
+        {{x.member_name}}
+    </td>
+    <td>
+        {{x.member_email}}
+    </td>
+    <td>
+        {{x.member_status}}
+    </td>
+    
+</tr>
+{% endfor %}
+
+
+  </tbody>
+</table>
+<br>
+{{ pagination.links | safe }}
+</div>
+
+
+
+
+{% endblock %}

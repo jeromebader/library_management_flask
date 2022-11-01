@@ -1,0 +1,61 @@
+{% extends "base_template.html" %}
+
+
+
+{% block content %}
+
+
+
+{{ pagination.info|safe }}
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+        <th>BooK_ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Isbn</th>
+        <th>Pages</th>
+        <th>Publisher</th>
+        <th>$ per day</th>
+        <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+   
+    {% for x in result %}
+    <tr>
+     
+    <td>{{x.books_id}}</td>
+    <td>
+        {{x.title}}
+    </td>
+    <td>
+        {{x.authors}}
+    </td>
+    <td>
+        {{x.isbn}}
+    </td>
+    <td>
+        {{x.num_pages}}
+    </td>
+    <td>
+        {{x.publisher}}
+    </td>
+    <td>
+        {{x.price_pday}}
+    </td>
+    <td>
+        <button type="button" class="btn btn-warning" onclick="window.location.href='{{ url_for('modify_book', id=x.books_id) }}';">Update</button>
+    </td>
+  
+</tr>
+{% endfor %}
+
+
+  </tbody>
+</table>
+<br>
+{{ pagination.links | safe }}
+<br>
+{% endblock %}

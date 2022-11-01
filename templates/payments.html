@@ -1,0 +1,80 @@
+{% extends "base_template.html" %}
+
+
+
+{% block content %}
+
+<div class="container">
+
+    <form class="form-horizontal" method="POST" action="{{ url_for('payments') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">{{ form.member.label(style="font-weight:bold") }} {{ form.member(class="form-control")}}</div>
+        <div class="form-group">{{ form.value.label(style="font-weight:bold") }} {{ form.value(class='form-control') }}</div>
+        <div class="form-group">{{ form.date.label(style="font-weight:bold") }} {{ form.date(class='form-control datepicker') }}</div>
+        <br>
+        <div class="form-group"> {{ form.submit(class="form-control btn btn-primary",style="font-weight:bold")}}</div>
+       
+    </form>
+    
+    {% with messages = get_flashed_messages(category_filter=["success"]) %}
+    {% if messages %}
+      <br>
+        {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+
+</div>
+
+<br>
+<br>
+
+
+
+
+<div class="container">
+<table class="table table-hover">
+  <thead>
+    <tr>
+        <th>Member_id</th>
+        <th>Member</th>
+        <th>Saldo (to pay)</th>
+        
+    </tr>
+  </thead>
+  <tbody>
+   
+    {% for x in result %}
+    <tr>
+
+  
+    <td>
+        {{x.member_id}}
+    </td>
+    <td>
+        {{x.member_name}}
+    </td>
+    <td>
+        {{x.open_to_pay}}
+    </td>
+
+
+
+
+    
+  
+</tr>
+{% endfor %}
+
+
+  </tbody>
+</table>
+<br>
+
+<br>
+</div>
+{% endblock %}
