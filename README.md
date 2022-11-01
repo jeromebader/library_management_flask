@@ -1,10 +1,10 @@
 ## Python-Flask-SQL Library Management System
 
-## Project Description
+### Project Description
 
 This is a library management system made with Python, Flask, SQLite, Bootstrap, JS, Ajax. It's a small baseline project I made for practicing some Flask concepts. It can be used for library management or similar businesses.
 
-## Getting Started
+### Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. You can deploy it locally or on a cloud platform.
 
@@ -41,5 +41,5 @@ $ pip install -r requirements.txt
 $ python3 main_app.py
 ```
 
--Go to the localhost http://127.0.0.1:5000/
+* Go to the localhost http://127.0.0.1:5000/
 
