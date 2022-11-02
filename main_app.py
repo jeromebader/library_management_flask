@@ -1,7 +1,5 @@
 # Libraries
 import os
-from werkzeug.utils import secure_filename
-from os.path import join, dirname, realpath
 from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, Float, String, VARCHAR, ForeignKey, DATE, DateTime
 from sqlalchemy.orm import relationship, backref
@@ -77,13 +75,39 @@ print (os.getcwd())
 app = Flask(__name__)
 os.chdir(os.path.dirname(__file__))
 app = Flask(__name__, template_folder='templates', static_folder='static')
-app.config["DEBUG"] = True
+#app.config["DEBUG"] = True
 
 # Define secret key to enable session
 app.secret_key = 'biblioteca2022'
 
 
-@app.route ("/init")
+
+# Start the app and landing on dashboard/index page
+@app.route("/")
+def main():
+    """Function for rendering the main page an dashboard"""
+
+    query1 = f'SELECT Count(member_id) FROM members_tbl'
+    members = session.execute(query1).fetchone()
+    query2 = f'SELECT SUM(payment_amount) From payments_tbl'
+    cash = session.execute(query2).fetchone()
+    query3 = f'SELECT SUM(due_amount) From transactions_tbl'
+    turnover = session.execute(query3).fetchone()
+
+    if turnover[0] == None or turnover[0] == 0:
+        turnover = 0
+    else:
+        turnover = (turnover[0])*-1
+
+
+    if cash[0] == None or cash[0] == 0:
+        cash = 0
+
+    return render_template('index.html', members=members[0], cash=cash, turnover=turnover)
+
+
+
+@app.route ("/start")
 def init():
     """
     Endpoint for initializing and populate the DB
@@ -110,6 +134,7 @@ def init():
                 publisher = e ["publisher"],
                 )
                 session.execute(ins)
+                session.commit()
 
         return True
 
@@ -119,26 +144,8 @@ def init():
         print ("Everything ok")
 
 
-    return redirect(url_for('/'))
-
-
-
-
-
-# Start the app and landing on dashboard/index page
-@app.route("/")
-def main():
-    """Function for rendering the main page an dashboard"""
-
-    query1 = f'SELECT Count(member_id) FROM members_tbl'
-    members = session.execute(query1).fetchone()
-    query2 = f'SELECT SUM(payment_amount) From payments_tbl'
-    cash = session.execute(query2).fetchone()
-    query3 = f'SELECT SUM(due_amount) From transactions_tbl'
-    turnover = session.execute(query3).fetchone()
-
-    return render_template('index.html', members=members[0], cash=cash[0], turnover=(turnover[0])*-1)
-
+    flash(f" Database populated with book-data, please check stock or search " ,'success')
+    return redirect(url_for('main'))
 
 
 # Live Search in the Dashboard page
@@ -157,7 +164,6 @@ def ajaxlivesearch():
             book = session.execute(query).fetchall()
          
     return jsonify({'htmlresponse': render_template('response.html', book=book)})
-
 
 
 # Realize a new rent (simplified)
@@ -189,9 +195,6 @@ def orders():
 
     
     return render_template('order_form.html', msg="Register renting", title="Register renting", form=form)
-
-
-
 
 # Adding new member
 @app.route("/members", methods=["GET", "POST"])
