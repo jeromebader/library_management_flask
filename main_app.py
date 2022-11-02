@@ -10,6 +10,7 @@ from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 from src.forms import PaymentForm, RentForm, ModifyBook, Member
 from flask_paginate import Pagination, get_page_parameter
+import re
 
 
 # DB Connections
@@ -128,7 +129,8 @@ def init():
                 ins = books_tbl.insert().values(
                 books_id=e["bookID"],
                 title=e["title"],
-                authors = e["authors"].encode('utf-8'),
+                # re.sub('[^A-Za-z0-9]+', '', s)
+                authors = re.sub('[^A-Za-z0-9]+', ' ', str(e["authors"])),
                 isbn = e["isbn"],
                 num_pages = e ["  num_pages"],
                 publisher = e ["publisher"],
